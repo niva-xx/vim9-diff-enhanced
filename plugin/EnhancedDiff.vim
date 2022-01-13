@@ -14,7 +14,7 @@ vim9script
 #
 # import EnhancedDiffLayout        from '../autoload/enhanceddifflayout.vim'
 # import EnhancedDiffLayout_Toggle from '../autoload/enhanceddifflayout.vim'
-import '../autoload/enhanceddifflayout.vim' as DiffEnhancedLayout
+import '../autoload/EnhancedDiff.vim' as DiffEnhancedLayout
 
 g:EnhancedDiffLayout_Options = { 'timemsecbefore': 100, 'autocmd_enabled': true }
 
