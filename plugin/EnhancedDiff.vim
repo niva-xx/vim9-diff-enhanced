@@ -1,11 +1,13 @@
 vim9script
 # EnhancedDiffLayout.vim - Enhanced Diff Layout functions for Vim
 # -------------------------------------------------------------
-# Version: 0.1
-# Maintainer:  NiVa
-# Last Change: Sat, 13 Jan 2022
-# Script: 
-# Copyright:   (c) 2021-2022 by NiVa
+# Version: 0.3.1
+# Maintainer:  Christian Brabandt <cb@256bit.org>
+# Last Change: Thu, 05 Mar 2015 08:11:46 +0100
+##   SubMaintainer:  NiVa
+##   Last Change: Sat, 13 Jan 2022
+# Script: http://www.vim.org/scripts/script.php?script_id=5121
+# Copyright:   (c) 2009-2015 by Christian Brabandt
 #          The VIM LICENSE applies to EnhancedDiffLayout.vim
 #          (see |copyright|) except use "EnhancedDiffLayout.vim"
 #          instead of "Vim".
@@ -27,13 +29,13 @@ augroup END
 
 command! -nargs=0 EnhancedDiffLayoutToggle call DiffEnhancedLayout.EnhancedDiffLayout_Toggle()
 # Functions {{{1
-def s:OldGitVersion() #{{{2
+def s:OldGitVersion(): string #{{{2
     if !exists('g:enhanced_diff_old_git')
-        silent let git_version = matchlist(system("git --version"),'\vgit version (\d+)\.(\d+)\.(\d+)')
-        let major = git_version[1]
-        let middle = git_version[2]
-        let minor = git_version[3]
-        let g:enhanced_diff_old_git = (major < 1) || (major == 1 && (middle < 8 || (middle == 8 && minor < 2)))
+        silent var git_version: list<string> = matchlist(system("git --version"),'\vgit version (\d+)\.(\d+)\.(\d+)')
+        var major:  string = git_version[1]
+        var middle: string = git_version[2]
+        var minor:  string = git_version[3]
+        var g:enhanced_diff_old_git: string = (major < 1) || (major == 1 && (middle < 8 || (middle == 8 && minor < 2)))
     endif
     return g:enhanced_diff_old_git
 enddef
@@ -83,7 +85,7 @@ def s:EnhancedDiffExpr(algo: string)
                 \ : "--diff-algorithm=".a:algo)
 enddef
 # public interface {{{1
-com! -nargs=1 -complete=custom,s:CustomDiffAlgComplete EnhancedDiff : &diffexpr=s:EnhancedDiffExpr("<args>") | :diffupdate
+com! -nargs=1 -complete=custom,s:CustomDiffAlgComplete EnhancedDiff : &diffexpr=s:EnhancedDiffExpr("<args>")|:diffupdate
 com! PatienceDiff :EnhancedDiff patience
 com! EnhancedDiffDisable  :set diffexpr=
 com! -nargs=* -bang EnhancedDiffIgnorePat call s:CustomIgnorePat(<bang>0, <f-args>)
