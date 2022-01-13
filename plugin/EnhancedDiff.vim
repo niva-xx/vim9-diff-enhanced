@@ -25,5 +25,5 @@ augroup difflayout
   autocmd CursorHold *.tmp call DiffEnhancedLayout.EnhancedDiffLayout()
 augroup END
 
-command! -nargs=0 EnhancedDiffLayoutToggle call EnhancedDiffLayout_Toggle()
+command! -nargs=0 EnhancedDiffLayoutToggle call DiffEnhancedLayout.EnhancedDiffLayout_Toggle()
 # vim: set ft=vim ff=dos fdm=marker ts=4 :expandtab:
