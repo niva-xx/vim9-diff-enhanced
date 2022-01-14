@@ -74,7 +74,7 @@ def s:ModifyDiffFiles(): void #{{{2
     call writefile(cnt2, v:fname_new)
   endif
 enddef
-def s:Warn(msg: string) #{{{2
+def s:Warn( msg: string )
   echohl WarningMsg ' unsilent echomsg  "EnhancedDiff: ' .. msg
   echohl Normal
 enddef
@@ -151,7 +151,7 @@ def s:SysList(cmd: string): string
   endif
   return split(system(cmd), '\n')
 enddef
-function EnhancedDiff#Diff(...) #{{{2
+function EnhancedDiff#Diff(...)
   let cmd = (exists("a:1") ? a:1 : '')
   let arg = (exists("a:2") ? a:2 : '')
 
@@ -161,7 +161,8 @@ function EnhancedDiff#Diff(...) #{{{2
     call s:DiffInit(cmd, arg)
   catch
     set diffexpr=
-    call s:Warn( cmd . ' not found in path, aborting!' )
+    " call s:Warn( cmd . ' not found in path, aborting!' )
+    call s:Warn( ' not found in path, aborting ' )
     return
   endtry
   call s:ModifyDiffFiles()
