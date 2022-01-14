@@ -75,8 +75,7 @@ def s:ModifyDiffFiles(): void #{{{2
   endif
 enddef
 def s:Warn(msg: string) #{{{2
-  echohl WarningMsg
-  unsilent echomsg  "EnhancedDiff: ". msg
+  echohl WarningMsg ' unsilent echomsg  "EnhancedDiff: ' .. msg
   echohl Normal
 enddef
 def s:ModifyPathAndCD(file: string): string #{{{2
@@ -153,15 +152,16 @@ def s:SysList(cmd: string): string
   return split(system(cmd), '\n')
 enddef
 function EnhancedDiff#Diff(...) #{{{2
-  let cmd=(exists("a:1") ? a:1 : '')
-  let arg=(exists("a:2") ? a:2 : '')
+  let cmd = (exists("a:1") ? a:1 : '')
+  let arg = (exists("a:2") ? a:2 : '')
+
+  " no-op
+  " error occured, reset diffexpr
   try
     call s:DiffInit(cmd, arg)
   catch
-    # no-op
-    # error occured, reset diffexpr
     set diffexpr=
-    call s:Warn(cmd. ' not found in path, aborting!')
+    call s:Warn( cmd . ' not found in path, aborting!' )
     return
   endtry
   call s:ModifyDiffFiles()
@@ -171,23 +171,23 @@ function EnhancedDiff#Diff(...) #{{{2
   let difflist=s:SysList(s:diffcmd . ' ' . join(s:diffargs, ' '))
   call s:ModifyPathAndCD('-')
   if v:shell_error < 0 || v:shell_error > 1
-    # An error occured
+    " An error occured
     set diffexpr=
     call s:Warn(cmd. ' Error executing "'. s:diffcmd. ' '.join(s:diffargs, ' ').'"')
     call s:Warn(difflist[0])
     return
   endif
-  # if unified diff...
-  # do some processing here
+  " if unified diff...
+  " do some processing here
   if !empty(difflist) && difflist[0] !~# '\m\C^\%(\d\+\)\%(,\d\+\)\?[acd]\%(\d\+\)\%(,\d\+\)\?'
-    # transform into normal diff
+    " transform into normal diff
     let difflist=EnhancedDiff#ConvertToNormalDiff(difflist)
   endif
   call writefile(difflist, v:fname_out)
   if get(g:, 'enhanced_diff_debug', 0)
-    # This is needed for the tests.
+    " This is needed for the tests.
     call writefile(difflist, 'EnhancedDiff_normal.txt')
-    # Also write default diff
+    " Also write default diff
     let opt = "-a --binary "
     if &diffopt =~ "icase"
       let opt .= "-i "
