@@ -13,8 +13,6 @@ vim9script
 #          No warranty, express or implied.
 #    *** ***   Use At-Your-Own-Risk!   *** ***
 #
-# import EnhancedDiffLayout        from '../autoload/enhanceddifflayout.vim'
-# import EnhancedDiffLayout_Toggle from '../autoload/enhanceddifflayout.vim'
 import '../autoload/EnhancedDiff.vim' as DiffEnhancedLayout
 
 g:EnhancedDiffLayout_Options = { 'timemsecbefore': 100,
@@ -82,14 +80,14 @@ function s:CustomIgnorePat(bang, ...) #{{{2
     endif
   endif
 endfunc
-def s:EnhancedDiffExpr(algo: string)
-  return printf('EnhancedDiff#Diff("git diff","%s")',
+def s:EnhancedDiffExpr(algo: string): string
+  return printf('EnhancedDiff#Diff("git diff", "%s")',
         \ s:OldGitVersion()
-        \ ? (a:algo == "patience" ? "--patience":"")
-        \ : "--diff-algorithm=".a:algo)
+        \ ? (algo == "patience" ? "--patience" : "")
+        \ : "--diff-algorithm = " .. algo)
 enddef
 # public interface {{{1
-com! -nargs=1 -complete=custom,s:CustomDiffAlgComplete EnhancedDiff : &diffexpr=s:EnhancedDiffExpr("<args>")|:diffupdate
+com! -nargs=1 -complete=custom,s:CustomDiffAlgComplete EnhancedDiff :exe '&diffexpr = s:EnhancedDiffExpr("<args>") | diffupdate'
 com! PatienceDiff :EnhancedDiff patience
 com! EnhancedDiffDisable  :set diffexpr=
 com! -nargs=* -bang EnhancedDiffIgnorePat call s:CustomIgnorePat(<bang>0, <f-args>)
